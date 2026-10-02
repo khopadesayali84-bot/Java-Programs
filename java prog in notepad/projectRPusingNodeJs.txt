@@ -1,0 +1,364 @@
+This is a large-scale project request. Providing complete, production-ready frontend, backend, and database code for an e-commerce platform like "Green Basket" is beyond the scope of a single response. However, I can provide you with a **blueprint** and **essential code snippets** for the core components, focusing on the **structure, database design, and key logic**.
+
+I will use **Node.js with Express.js** for the backend, **EJS** for a simple server-side rendered frontend, and **MySQL** for the database, as these are common, effective choices.
+
+-----
+
+## 1\. Database Design (MySQL)
+
+We need several tables to manage users (admin/farmer and customer), products, orders, and feedback.
+
+### **SQL Schema Creation**
+
+```sql
+-- 1. Users Table (for both Farmers/Admins and Customers)
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password_hash CHAR(60) NOT NULL, -- Storing hashed passwords
+    email VARCHAR(100) UNIQUE NOT NULL,
+    full_name VARCHAR(100),
+    phone_number VARCHAR(15),
+    user_type ENUM('customer', 'farmer', 'admin') NOT NULL, -- Differentiates user roles
+    upi_id VARCHAR(50), -- Only relevant for farmers/admins
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Products Table (The items for sale)
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    farmer_id INT, -- Links product to the farmer who listed it
+    product_name VARCHAR(100) NOT NULL,
+    category ENUM('leafy veggies', 'root veggies', 'fruits', 'goods') NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    stock_quantity INT NOT NULL,
+    unit VARCHAR(20) NOT NULL, -- e.g., 'kg', 'piece', 'bunch'
+    description TEXT,
+    wasted_stock INT DEFAULT 0, -- To manage wasted stock
+    FOREIGN KEY (farmer_id) REFERENCES users(user_id)
+);
+
+-- 3. Orders Table (Main order information)
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    order_status ENUM('pending', 'delivered', 'cancelled') NOT NULL DEFAULT 'pending',
+    payment_method VARCHAR(50),
+    FOREIGN KEY (customer_id) REFERENCES users(user_id)
+);
+
+-- 4. Order Details Table (Items within each order)
+CREATE TABLE order_details (
+    order_detail_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price_at_purchase DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- 5. Feedback Table
+CREATE TABLE feedbacks (
+    feedback_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    feedback_text TEXT NOT NULL,
+    rating INT CHECK (rating >= 1 AND rating <= 5),
+    feedback_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(user_id)
+);
+```
+
+-----
+
+## 2\. Backend (Node.js/Express.js with MySQL)
+
+This section provides the basic setup for database connection and user authentication logic.
+
+### **A. Setup and Database Connection**
+
+1.  **Dependencies:** You'll need `express`, `mysql2` (or `mysql`), `dotenv`, and `bcryptjs`.
+
+    ```bash
+    npm init -y
+    npm install express mysql2 bcryptjs dotenv
+    ```
+
+2.  **`db.js` (Database Connection Module):**
+
+    ```javascript
+    // db.js
+    const mysql = require('mysql2');
+    require('dotenv').config(); // Use .env for sensitive data
+
+    const pool = mysql.createPool({
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || 'your_password',
+        database: process.env.DB_NAME || 'green_basket',
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
+    }).promise(); // Use promise wrapper for async/await
+
+    module.exports = pool;
+    ```
+
+### **B. Key Backend Logic (User Management)**
+
+#### **1. Sign-up Route (`/signup`)**
+
+This uses `bcryptjs` for secure password hashing.
+
+```javascript
+// server.js - Part of the main Express app
+const express = require('express');
+const router = express.Router();
+const db = require('./db'); // The database connection pool
+const bcrypt = require('bcryptjs');
+
+// POST request for Signup
+router.post('/signup', async (req, res) => {
+    const { username, password, email, full_name, user_type, upi_id } = req.body;
+
+    // Basic validation
+    if (!username || !password || !email || !user_type) {
+        return res.status(400).send('Missing required fields.');
+    }
+
+    try {
+        // 1. Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const password_hash = await bcrypt.hash(password, salt);
+
+        // 2. MySQL Query to insert new user
+        const sql = `INSERT INTO users (username, password_hash, email, full_name, user_type, upi_id)
+                     VALUES (?, ?, ?, ?, ?, ?)`;
+
+        const [result] = await db.query(sql, [
+            username,
+            password_hash,
+            email,
+            full_name,
+            user_type,
+            user_type === 'farmer' ? upi_id : null // Only store UPI for farmers
+        ]);
+
+        console.log('User created:', result.insertId);
+        res.redirect('/login'); // Redirect to login after successful sign-up
+    } catch (error) {
+        console.error('Signup error:', error);
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(409).send('Username or email already exists.');
+        }
+        res.status(500).send('Server error during sign-up.');
+    }
+});
+
+module.exports = router;
+```
+
+#### **2. Login Route (`/login`)**
+
+This compares the provided password with the stored hash.
+
+```javascript
+// server.js - Part of the main Express app
+// (Requires a session/cookie library like express-session for real-world use)
+router.post('/login', async (req, res) => {
+    const { username, password, user_type } = req.body;
+
+    try {
+        // 1. Find the user by username and user_type
+        const sql = 'SELECT * FROM users WHERE username = ? AND user_type = ?';
+        const [users] = await db.query(sql, [username, user_type]);
+
+        if (users.length === 0) {
+            return res.status(401).send('Invalid credentials or user type.');
+        }
+
+        const user = users[0];
+
+        // 2. Compare the plain password with the hashed password
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+
+        if (!isMatch) {
+            return res.status(401).send('Invalid credentials.');
+        }
+
+        // 3. Login successful (In a real app, you would set a session/JWT here)
+        req.session.user = { id: user.user_id, name: user.username, type: user.user_type }; // Example session logic
+
+        if (user.user_type === 'customer') {
+            res.redirect('/user-dashboard');
+        } else if (user.user_type === 'farmer' || user.user_type === 'admin') {
+            res.redirect('/admin-dashboard');
+        } else {
+            res.send('Login successful, but no valid dashboard route.');
+        }
+
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).send('Server error during login.');
+    }
+});
+```
+
+-----
+
+## 3\. Frontend Mockup (EJS Templates)
+
+We'll use EJS (`npm install ejs`) for simple dynamic rendering.
+
+### **A. Home Page (`views/index.ejs`)**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Green Basket 🧺</title>
+</head>
+<body>
+    <header>
+        <h1>Green Basket 🧺</h1>
+        <nav>
+            <a href="/login">Login</a> |
+            <a href="/signup">Sign Up</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Your Direct Link to Fresh Farm Produce!</h2>
+        <p>Green Basket connects **farmers directly with customers**, ensuring the freshest quality and fair prices. Get leafy veggies, root veggies, fruits, and goods delivered straight from the farm.</p>
+        <p>Join us today as a customer or farmer!</p>
+    </main>
+</body>
+</html>
+```
+
+### **B. User Dashboard (`views/user-dashboard.ejs`)**
+
+This demonstrates how product data fetched from the backend would be displayed.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Customer Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Green Basket 🧺</h1>
+        <span>Hello, **<%= username %>**! Welcome back 👋</span>
+        <nav>
+            <a href="/profile">Profile</a> |
+            <a href="/feedback">Feedback</a> |
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="search-bar">
+            <input type="text" placeholder="Search vegetables, fruits, or goods...">
+            <button>Search</button>
+        </div>
+
+        <h2>Shop by Category</h2>
+        <% ['Leafy Veggies', 'Root Veggies', 'Fruits', 'Goods'].forEach(category => { %>
+            <section id="<%= category.toLowerCase().replace(' ', '-') %>">
+                <h3><%= category %></h3>
+                <% if (products && products[category]) { %>
+                    <div class="product-grid">
+                        <% products[category].forEach(product => { %>
+                            <div class="product-card">
+                                <h4><%= product.product_name %></h4>
+                                <p>Price: ₹<%= product.price %> / <%= product.unit %></p>
+                                <p>Farmer: <%= product.farmer_name %></p>
+                                <form action="/add-to-basket" method="POST">
+                                    <input type="hidden" name="product_id" value="<%= product.product_id %>">
+                                    <input type="number" name="quantity" value="1" min="1" max="<%= product.stock_quantity %>" required>
+                                    <button type="submit">Add to Basket</button>
+                                </form>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } else { %>
+                    <p>No products available in this category.</p>
+                <% } %>
+            </section>
+        <% }); %>
+
+        <div class="checkout-summary">
+            <h3>Your Basket</h3>
+            <p>Total Price: **₹<%= total_price %>**</p>
+            <button onclick="location.href='/checkout'">Proceed to Pay</button>
+        </div>
+    </main>
+</body>
+</html>
+```
+
+### **C. Admin Dashboard (`views/admin-dashboard.ejs`)**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Farmer/Admin Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Green Basket 🧺</h1>
+        <span>Hello, **<%= username %>**! Welcome back, Farmer 👋</span>
+        <nav>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Farmer Management Console</h2>
+        <div class="dashboard-options">
+            <a href="/admin/profile">👤 Profile (Edit UPI/Details)</a>
+            <a href="/admin/stock">📦 Manage & Update Stock</a>
+            <a href="/admin/customers">👥 View Customers & Order History</a>
+            <a href="/admin/orders">🧾 View Orders (Pending/Delivered)</a>
+            <a href="/admin/feedbacks">⭐ View Feedbacks</a>
+            <a href="/admin/wasted-stock">🗑️ Manage Wasted Stock</a>
+        </div>
+
+        <section id="stock-management">
+            <h3>Manage Products</h3>
+            <p>Add new products or update existing stock levels.</p>
+            </section>
+
+        </main>
+</body>
+</html>
+```
+
+-----
+
+## 4\. Key MySQL Queries for Functionality
+
+Here are the essential queries needed for the core functionalities:
+
+### **A. User-Dashboard (Customer)**
+
+| Functionality | MySQL Query |
+| :--- | :--- |
+| **Fetch Products** | `SELECT p.*, u.full_name AS farmer_name FROM products p JOIN users u ON p.farmer_id = u.user_id WHERE p.stock_quantity > 0 AND p.category = ? ORDER BY p.product_name` |
+| **Search Products** | `SELECT * FROM products WHERE product_name LIKE ? AND stock_quantity > 0` (The `?` will be `'%searchTerm%'`) |
+| **Add Feedback** | `INSERT INTO feedbacks (customer_id, feedback_text, rating) VALUES (?, ?, ?)` |
+
+### **B. Admin-Dashboard (Farmer)**
+
+| Functionality | MySQL Query |
+| :--- | :--- |
+| **Add New Stock** | `INSERT INTO products (farmer_id, product_name, category, price, stock_quantity, unit, description) VALUES (?, ?, ?, ?, ?, ?, ?)` |
+| **Update Stock/Price** | `UPDATE products SET stock_quantity = ?, price = ?, description = ? WHERE product_id = ? AND farmer_id = ?` |
+| **Manage Wasted Stock** | `UPDATE products SET stock_quantity = stock_quantity - ?, wasted_stock = wasted_stock + ? WHERE product_id = ? AND farmer_id = ?` |
+| **View Pending Orders**| `SELECT * FROM orders WHERE order_status = 'pending' AND order_id IN (SELECT order_id FROM order_details od JOIN products p ON od.product_id = p.product_id WHERE p.farmer_id = ?)` |
+| **View Customer Details** | `SELECT user_id, full_name, email, phone_number FROM users WHERE user_type = 'customer'` |
+| **View Feedbacks** | `SELECT f.*, u.username FROM feedbacks f JOIN users u ON f.customer_id = u.user_id` |

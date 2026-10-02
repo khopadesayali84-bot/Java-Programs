@@ -1,0 +1,12 @@
+h1 {
+    text-align: center;
+}
+
+img {
+    position: absolute;
+    left : 40%;
+}
+
+body {
+    background-color:gray ;
+}

@@ -1,0 +1,471 @@
+----------------data base codes---------------
+
+CREATE DATABASE green_basket;
+
+USE green_basket;
+
+-- Users Table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    type ENUM('admin', 'user'),
+    address TEXT,
+    phone VARCHAR(20)
+);
+
+-- Products Table
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    farmer_id INT,
+    name VARCHAR(100),
+    category VARCHAR(50),
+    price DECIMAL(10,2),
+    quantity INT,
+    FOREIGN KEY (farmer_id) REFERENCES users(id)
+);
+
+-- Orders Table
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    quantity INT,
+    total_price DECIMAL(10,2),
+    status ENUM('pending', 'completed') DEFAULT 'pending',
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Feedback Table
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    comment TEXT,
+    rating INT CHECK(rating BETWEEN 1 AND 5),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+--------------------------------------------------------------------
+
+2. PHP: Database Connection (db.php)
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "green_basket";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
+
+---------------------------------------------------------------------
+
+PHP: Signup Handler (signup.php)
+
+
+<?php
+include 'db.php';
+
+$name = $_POST['name'];
+$email = $_POST['email'];
+$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+$address = $_POST['address'];
+$phone = $_POST['phone'];
+$type = $_POST['type'];
+
+$stmt = $conn->prepare("INSERT INTO users (name, email, password, address, phone, type) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssss", $name, $email, $password, $address, $phone, $type);
+
+if ($stmt->execute()) {
+    echo "Signup successful. <a href='login.html'>Login here</a>";
+} else {
+    echo "Error: " . $stmt->error;
+}
+$stmt->close();
+$conn->close();
+?>
+
+----------------------------------------------------------------------------------
+
+6. PHP: Login Handler (login.php)
+
+
+<?php
+session_start();
+include 'db.php';
+
+$email = $_POST['email'];
+$password = $_POST['password'];
+
+$stmt = $conn->prepare("SELECT id, name, password, type FROM users WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 1) {
+    $user = $result->fetch_assoc();
+    if (password_verify($password, $user['password'])) {
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['name'] = $user['name'];
+        $_SESSION['type'] = $user['type'];
+        
+        if ($user['type'] == 'admin') {
+            header("Location: admin_dashboard.php");
+        } else {
+            header("Location: user_dashboard.php");
+        }
+    } else {
+        echo "Invalid password.";
+    }
+} else {
+    echo "User not found.";
+}
+$stmt->close();
+$conn->close();
+?>
+
+----------------------------------------------------------------------------
+
+1. admin_dashboard.php – List Products, Edit Stock, View Feedback
+
+
+<?php
+session_start();
+if ($_SESSION['type'] !== 'admin') {
+    header("Location: login.html");
+    exit();
+}
+include 'db.php';
+
+// Handle stock update
+if (isset($_POST['update_stock'])) {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+    $stmt = $conn->prepare("UPDATE products SET quantity = ? WHERE id = ?");
+    $stmt->bind_param("ii", $quantity, $product_id);
+    $stmt->execute();
+    $stmt->close();
+}
+
+// Fetch products added by the admin
+$farmer_id = $_SESSION['id'];
+$result = $conn->query("SELECT * FROM products WHERE farmer_id = $farmer_id");
+
+// Fetch feedback for products
+$feedback = $conn->query("SELECT f.comment, f.rating, u.name AS customer FROM feedback f JOIN users u ON f.user_id = u.id JOIN products p ON f.product_id = p.id WHERE p.farmer_id = $farmer_id");
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard - Green Basket</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Welcome, <?php echo $_SESSION['name']; ?></h1>
+    <h2>Your Products</h2>
+    <table border="1" cellpadding="5">
+        <tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Quantity</th><th>Action</th></tr>
+        <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+            <form method="POST">
+                <td><?php echo $row['id']; ?><input type="hidden" name="product_id" value="<?php echo $row['id']; ?>"></td>
+                <td><?php echo $row['name']; ?></td>
+                <td><?php echo $row['category']; ?></td>
+                <td><?php echo $row['price']; ?></td>
+                <td><input type="number" name="quantity" value="<?php echo $row['quantity']; ?>"></td>
+                <td><button name="update_stock">Update</button></td>
+            </form>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+
+    <h2>Feedback on Your Products</h2>
+    <table border="1" cellpadding="5">
+        <tr><th>Customer</th><th>Comment</th><th>Rating</th></tr>
+        <?php while($fb = $feedback->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo $fb['customer']; ?></td>
+            <td><?php echo $fb['comment']; ?></td>
+            <td><?php echo $fb['rating']; ?>/5</td>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+
+    <a href="logout.php">Logout</a>
+</body>
+</html>
+
+---------------------------------------------------------------------------------------
+
+2. user_dashboard.php – Browse Categories, Add to Cart, Checkout
+
+
+<?php
+session_start();
+if ($_SESSION['type'] !== 'user') {
+    header("Location: login.html");
+    exit();
+}
+include 'db.php';
+
+// Initialize cart session
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+// Handle add to cart
+if (isset($_POST['add_cart'])) {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+    if (isset($_SESSION['cart'][$product_id])) {
+        $_SESSION['cart'][$product_id] += $quantity;
+    } else {
+        $_SESSION['cart'][$product_id] = $quantity;
+    }
+}
+
+// Fetch categories
+$categories = ['Leafy Vegetables', 'Grains', 'Fruits'];
+$category = isset($_GET['category']) ? $_GET['category'] : $categories[0];
+
+// Fetch products
+$stmt = $conn->prepare("SELECT p.*, u.name AS farmer_name FROM products p JOIN users u ON p.farmer_id = u.id WHERE p.category = ?");
+$stmt->bind_param("s", $category);
+$stmt->execute();
+$products = $stmt->get_result();
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>User Dashboard - Green Basket</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Welcome, <?php echo $_SESSION['name']; ?></h1>
+
+    <h2>Categories</h2>
+    <?php foreach ($categories as $cat): ?>
+        <a href="?category=<?php echo urlencode($cat); ?>"><?php echo $cat; ?></a> |
+    <?php endforeach; ?>
+
+    <h2>Products in <?php echo htmlspecialchars($category); ?></h2>
+    <table border="1" cellpadding="5">
+        <tr><th>Name</th><th>Farmer</th><th>Price</th><th>Quantity</th><th>Action</th></tr>
+        <?php while($row = $products->fetch_assoc()): ?>
+        <tr>
+            <form method="POST">
+                <td><?php echo $row['name']; ?></td>
+                <td><?php echo $row['farmer_name']; ?></td>
+                <td><?php echo $row['price']; ?></td>
+                <td><input type="number" name="quantity" value="1" min="1" max="<?php echo $row['quantity']; ?>"></td>
+                <td>
+                    <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
+                    <button name="add_cart">Add to Cart</button>
+                </td>
+            </form>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+
+    <h2>Your Cart</h2>
+    <?php if (!empty($_SESSION['cart'])): ?>
+    <form action="checkout.php" method="POST">
+        <table border="1" cellpadding="5">
+            <tr><th>Product</th><th>Quantity</th><th>Price</th></tr>
+            <?php 
+            $total = 0;
+            foreach ($_SESSION['cart'] as $pid => $qty):
+                $stmt = $conn->prepare("SELECT name, price FROM products WHERE id = ?");
+                $stmt->bind_param("i", $pid);
+                $stmt->execute();
+                $product = $stmt->get_result()->fetch_assoc();
+                $subtotal = $product['price'] * $qty;
+                $total += $subtotal;
+            ?>
+            <tr>
+                <td><?php echo $product['name']; ?></td>
+                <td><?php echo $qty; ?></td>
+                <td><?php echo $subtotal; ?></td>
+            </tr>
+            <?php endwhile; ?>
+            <tr><td colspan="2">Total</td><td><?php echo $total; ?></td></tr>
+        </table>
+        <button type="submit">Proceed to Checkout</button>
+    </form>
+    <?php else: ?>
+        <p>Your cart is empty.</p>
+    <?php endif; ?>
+
+    <a href="logout.php">Logout</a>
+</body>
+</html>
+
+---------------------------------------------------------------------------------
+
+3. checkout.php – Simulate Payment Integration
+
+<?php
+session_start();
+if ($_SESSION['type'] !== 'user' || empty($_SESSION['cart'])) {
+    header("Location: user_dashboard.php");
+    exit();
+}
+include 'db.php';
+
+$user_id = $_SESSION['id'];
+$cart = $_SESSION['cart'];
+$total = 0;
+
+// Insert each item as an order
+foreach ($cart as $product_id => $quantity) {
+    $stmt = $conn->prepare("SELECT price, quantity FROM products WHERE id = ?");
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+
+    if ($result['quantity'] >= $quantity) {
+        $subtotal = $result['price'] * $quantity;
+        $total += $subtotal;
+
+        // Reduce stock
+        $new_quantity = $result['quantity'] - $quantity;
+        $stmt = $conn->prepare("UPDATE products SET quantity = ? WHERE id = ?");
+        $stmt->bind_param("ii", $new_quantity, $product_id);
+        $stmt->execute();
+
+        // Insert into orders
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price, status) VALUES (?, ?, ?, ?, 'completed')");
+        $stmt->bind_param("iiid", $user_id, $product_id, $quantity, $subtotal);
+        $stmt->execute();
+    }
+}
+
+// Clear the cart
+unset($_SESSION['cart']);
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Checkout - Green Basket</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Payment Successful!</h1>
+    <p>Total paid: ₹<?php echo $total; ?></p>
+    <p>Choose a payment method:</p>
+    <a href="user_dashboard.php">Continue Shopping</a><br><br>
+    <form method="POST" action="payment_gateway.php">
+        <input type="hidden" name="amount" value="<?php echo $total; ?>">
+        <button type="submit" name="gpay">Pay with GPay</button>
+        <button type="submit" name="phonepe">Pay with PhonePe</button>
+    </form>
+</body>
+</html>
+
+------------------------------------------------------------------------------------
+
+4. payment_gateway.php – Simulated Payment
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $amount = $_POST['amount'];
+    $method = isset($_POST['gpay']) ? 'GPay' : (isset($_POST['phonepe']) ? 'PhonePe' : 'Unknown');
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Payment Gateway</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Payment Confirmation</h1>
+    <p>You have chosen to pay ₹<?php echo htmlspecialchars($amount); ?> via <?php echo htmlspecialchars($method); ?>.</p>
+    <p>This is a simulation. No real transaction will occur.</p>
+    <a href="user_dashboard.php">Return to Dashboard</a>
+</body>
+</html>
+
+----------------------------------------------------------------------------------------------------------------------
+
+5. feedback.php – Allow Rating and Comment
+
+<?php
+session_start();
+if ($_SESSION['type'] !== 'user') {
+    header("Location: login.html");
+    exit();
+}
+include 'db.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_SESSION['id'];
+    $product_id = $_POST['product_id'];
+    $comment = $_POST['comment'];
+    $rating = $_POST['rating'];
+
+    $stmt = $conn->prepare("INSERT INTO feedback (user_id, product_id, comment, rating) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("iisi", $user_id, $product_id, $comment, $rating);
+    if ($stmt->execute()) {
+        echo "Feedback submitted successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+    $stmt->close();
+}
+
+$product_id = isset($_GET['product_id']) ? intval($_GET['product_id']) : 0;
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Feedback - Green Basket</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <h1>Submit Feedback</h1>
+    <form method="POST">
+        <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+        <textarea name="comment" placeholder="Write your feedback" required></textarea><br>
+        <label>Rating:</label>
+        <select name="rating" required>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+        </select><br>
+        <button type="submit">Submit Feedback</button>
+    </form>
+    <a href="user_dashboard.php">Back to Dashboard</a>
+</body>
+</html>
+
+-------------------------------------------------------------------------------------------------------------
+
+6. logout.php – Destroy Session
+
+<?php
+session_start();
+session_destroy();
+header("Location: login.html");
+?>

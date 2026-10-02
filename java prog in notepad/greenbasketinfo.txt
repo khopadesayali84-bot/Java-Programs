@@ -1,0 +1,896 @@
+green_basket/
+├── index.html
+├── login.html
+├── signup.html
+├── user_dashboard.html
+├── admin_dashboard.html
+├── css/
+│   └── style.css
+├── js/
+│   └── script.js
+├── api/
+│   └── backend.php   (for DB operations)
+└── db.sql            (for database schema)
+
+
+1. Database Schema (MySQL Example):-
+
+
+green-basket/
+│
+├── index.html              # Home page with login/signup options
+├── login.php               # Handles login (admin/user)
+├── signup.php              # Handles signup
+├── dashboard_admin.php     # Admin (Farmer) Dashboard
+├── dashboard_user.php      # User (Customer) Dashboard
+├── add_to_cart.php         # Add items to bag/cart
+├── payment.php             # Simulated payment handling
+├── update_stock.php        # Admin stock management
+├── search.php              # Search bar logic
+├── db.php                  # Database connection
+├── styles/
+│   └── style.css
+├── js/
+│   └── script.js
+└── sql/
+    └── schema.sql
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    user_type ENUM('admin', 'user'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Products
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    category VARCHAR(50),
+    price DECIMAL(10,2),
+    stock INT,
+    admin_id INT,
+    image VARCHAR(255),
+    upcoming BOOLEAN DEFAULT 0,
+    weekend_offer BOOLEAN DEFAULT 0,
+    FOREIGN KEY (admin_id) REFERENCES users(id)
+);
+
+-- Orders
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    quantity INT,
+    total_price DECIMAL(10,2),
+    status ENUM('pending', 'delivered') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Feedback
+CREATE TABLE feedback (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    product_id INT,
+    rating INT,
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+-- Waste Stock
+CREATE TABLE waste_stock (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    quantity INT,
+    added_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Login page: login.php
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Green Basket</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <header>
+    <h1>Green Basket</h1>
+    <nav>
+      <a href="login.php">Login</a> | 
+      <a href="signup.php">Signup</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Connecting Farmers to Customers Directly</h2>
+    <p>Buy fresh veggies directly from farmers at affordable prices without third-party commissions.</p>
+  </main>
+</body>
+</html>
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Home page: index.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Green Basket</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <header>
+    <h1>Green Basket</h1>
+    <nav>
+      <a href="login.php">Login</a> | 
+      <a href="signup.php">Signup</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Connecting Farmers to Customers Directly</h2>
+    <p>Buy fresh veggies directly from farmers at affordable prices without third-party commissions.</p>
+  </main>
+</body>
+</html>
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+-------------------------------------------------------------php codes------------------------------------------------
+
+Login page: login.php
+
+<?php
+session_start();
+include('db.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $user_type = $_POST['user_type'];
+
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email=? AND user_type=?");
+    $stmt->bind_param("ss", $email, $user_type);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user'] = $user;
+        if ($user_type === 'admin') {
+            header("Location: dashboard_admin.php");
+        } else {
+            header("Location: dashboard_user.php");
+        }
+        exit;
+    } else {
+        echo "Invalid login!";
+    }
+}
+?>
+
+<!-- HTML -->
+<form method="POST">
+  <h2>Login</h2>
+  <select name="user_type">
+    <option value="admin">Farmer (Admin)</option>
+    <option value="user">Customer (User)</option>
+  </select><br>
+  Email: <input type="email" name="email" required><br>
+  Password: <input type="password" name="password" required><br>
+  <button type="submit">Login</button>
+</form>
+
+------------------------------------------------------------------------------------------------------------------------
+
+Signup page: signup.php
+
+
+<?php
+include('db.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $user_type = $_POST['user_type'];
+
+    $stmt = $conn->prepare("INSERT INTO users (name, email, password, user_type) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $name, $email, $password, $user_type);
+    if ($stmt->execute()) {
+        header("Location: login.php");
+    } else {
+        echo "Signup failed!";
+    }
+}
+?>
+
+<form method="POST">
+  <h2>Signup</h2>
+  Name: <input type="text" name="name" required><br>
+  Email: <input type="email" name="email" required><br>
+  Password: <input type="password" name="password" required><br>
+  <label>Signup as:</label>
+  <select name="user_type">
+    <option value="admin">Farmer (Admin)</option>
+    <option value="user">Customer (User)</option>
+  </select><br>
+  <button type="submit">Signup</button>
+</form>
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Database connection: db.php
+
+
+<?php
+$host = "localhost";
+$user = "root";
+$pass = "";
+$dbname = "green_basket";
+
+$conn = new mysqli($host, $user, $pass, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Farmer dashboard: dashboard_admin.php
+
+
+<?php
+session_start();
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+echo "<h2>Welcome Farmer " . $_SESSION['user']['name'] . "</h2>";
+?>
+
+<ul>
+  <li><a href="update_stock.php">Update Stock</a></li>
+  <li><a href="add_product.php">Add Product</a></li>
+  <li><a href="view_feedback.php">View Feedback</a></li>
+  <li><a href="search_orders.php">Search Orders</a></li>
+</ul>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Add to cart: add_to_cart.php
+
+
+<?php
+session_start();
+
+if (!isset($_SESSION['cart'])) {
+    $_SESSION['cart'] = [];
+}
+
+$product_id = $_POST['product_id'];
+$quantity = $_POST['quantity'];
+
+if (!isset($_SESSION['cart'][$product_id])) {
+    $_SESSION['cart'][$product_id] = $quantity;
+} else {
+    $_SESSION['cart'][$product_id] += $quantity;
+}
+
+header("Location: dashboard_user.php");
+exit;
+
+-------------------------------------------------------------------------------------------------------------------------
+
+View cart and checkout: view_cart.php
+
+
+<?php
+session_start();
+include('db.php');
+
+$cart = $_SESSION['cart'] ?? [];
+$total = 0;
+
+if (empty($cart)) {
+    echo "<p>Your bag is empty.</p><a href='dashboard_user.php'>Go Back</a>";
+    exit;
+}
+
+$product_ids = implode(',', array_keys($cart));
+$result = $conn->query("SELECT * FROM products WHERE id IN ($product_ids)");
+$products = [];
+while ($row = $result->fetch_assoc()) {
+    $products[$row['id']] = $row;
+}
+
+?>
+
+<h2>Your Bag</h2>
+<table border="1">
+<tr>
+  <th>Product</th>
+  <th>Quantity</th>
+  <th>Price</th>
+  <th>Subtotal</th>
+</tr>
+
+<?php foreach ($cart as $pid => $qty): ?>
+<tr>
+  <td><?= $products[$pid]['name'] ?></td>
+  <td><?= $qty ?></td>
+  <td>₹<?= $products[$pid]['price'] ?></td>
+  <td>₹<?= $products[$pid]['price'] * $qty ?></td>
+</tr>
+<?php 
+  $total += $products[$pid]['price'] * $qty;
+endforeach; ?>
+
+<tr>
+  <td colspan="3">Total</td>
+  <td>₹<?= $total ?></td>
+</tr>
+</table>
+
+<a href="payment.php">Proceed to Payment</a>
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Payment simulation page: payment.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_SESSION['user']['id'];
+    foreach ($_SESSION['cart'] as $pid => $qty) {
+        // Fetch product price
+        $stmt = $conn->prepare("SELECT price, stock FROM products WHERE id=?");
+        $stmt->bind_param("i", $pid);
+        $stmt->execute();
+        $res = $stmt->get_result()->fetch_assoc();
+        $price = $res['price'];
+
+        // Insert order
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)");
+        $total = $qty * $price;
+        $stmt->bind_param("iiid", $user_id, $pid, $qty, $total);
+        $stmt->execute();
+
+        // Reduce stock
+        $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+        $stmt->bind_param("ii", $qty, $pid);
+        $stmt->execute();
+    }
+
+    unset($_SESSION['cart']);
+    echo "<p>Payment successful! Order placed.</p><a href='dashboard_user.php'>Back to Dashboard</a>";
+    exit;
+}
+?>
+
+<form method="POST">
+  <h2>Choose Payment Option</h2>
+  <input type="radio" name="method" value="gpay" checked> GPay<br>
+  <input type="radio" name="method" value="phonepe"> PhonePe<br><br>
+  <button type="submit">Make Payment</button>
+</form>
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Update stock: update_stock.php
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$admin_id = $_SESSION['user']['id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+
+    $stmt = $conn->prepare("UPDATE products SET price = ?, stock = ? WHERE id = ? AND admin_id = ?");
+    $stmt->bind_param("diii", $price, $stock, $product_id, $admin_id);
+    $stmt->execute();
+}
+
+// Fetch farmer's products
+$stmt = $conn->prepare("SELECT * FROM products WHERE admin_id = ?");
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$products = $stmt->get_result();
+?>
+
+<h2>Update Your Stock</h2>
+<table border="1">
+<tr>
+  <th>Product</th>
+  <th>Price</th>
+  <th>Stock</th>
+  <th>Update</th>
+</tr>
+
+<?php while ($row = $products->fetch_assoc()): ?>
+<form method="POST">
+<tr>
+  <td><?= $row['name'] ?></td>
+  <td>
+    <input type="number" step="0.01" name="price" value="<?= $row['price'] ?>" required>
+  </td>
+  <td>
+    <input type="number" name="stock" value="<?= $row['stock'] ?>" required>
+  </td>
+  <td>
+    <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
+    <button type="submit">Update</button>
+  </td>
+</tr>
+</form>
+<?php endwhile; ?>
+</table>
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Add new product: add_product.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$admin_id = $_SESSION['user']['id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $category = $_POST['category'];
+    $price = $_POST['price'];
+    $stock = $_POST['stock'];
+    $upcoming = isset($_POST['upcoming']) ? 1 : 0;
+    $offer = isset($_POST['offer']) ? 1 : 0;
+
+    $stmt = $conn->prepare("INSERT INTO products (name, category, price, stock, admin_id, upcoming, weekend_offer) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssdiiii", $name, $category, $price, $stock, $admin_id, $upcoming, $offer);
+    $stmt->execute();
+
+    echo "<p>Product added!</p>";
+}
+?>
+
+<h2>Add New Product</h2>
+<form method="POST">
+  Name: <input type="text" name="name" required><br>
+  Category:
+  <select name="category">
+    <option value="Leafy Vegetables">Leafy Vegetables</option>
+    <option value="Grains">Grains</option>
+    <option value="Veggies">Veggies</option>
+  </select><br>
+  Price: <input type="number" name="price" step="0.01" required><br>
+  Stock: <input type="number" name="stock" required><br>
+  <input type="checkbox" name="upcoming"> Mark as Upcoming<br>
+  <input type="checkbox" name="offer"> Weekend Offer<br>
+  <button type="submit">Add Product</button>
+</form>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Log wasted products: log_waste.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$admin_id = $_SESSION['user']['id'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+
+    $stmt = $conn->prepare("INSERT INTO waste_stock (product_id, quantity) VALUES (?, ?)");
+    $stmt->bind_param("ii", $product_id, $quantity);
+    $stmt->execute();
+
+    // Update product stock
+    $stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+    $stmt->bind_param("ii", $quantity, $product_id);
+    $stmt->execute();
+}
+
+// Get all admin products
+$stmt = $conn->prepare("SELECT * FROM products WHERE admin_id = ?");
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$products = $stmt->get_result();
+?>
+
+<h2>Log Wasted Stock</h2>
+<form method="POST">
+  <select name="product_id">
+    <?php while ($row = $products->fetch_assoc()): ?>
+      <option value="<?= $row['id'] ?>"><?= $row['name'] ?></option>
+    <?php endwhile; ?>
+  </select><br>
+  Quantity: <input type="number" name="quantity" required><br>
+  <button type="submit">Log Waste</button>
+</form>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Search orders by location: search_orders.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$location = $_GET['location'] ?? '';
+
+if ($location) {
+    $stmt = $conn->prepare("
+        SELECT o.*, u.name AS customer_name, u.email, p.name AS product_name 
+        FROM orders o 
+        JOIN users u ON o.user_id = u.id 
+        JOIN products p ON o.product_id = p.id 
+        WHERE u.location LIKE ?
+    ");
+    $loc = "%$location%";
+    $stmt->bind_param("s", $loc);
+    $stmt->execute();
+    $orders = $stmt->get_result();
+}
+?>
+
+<h2>Search Orders by Customer Location</h2>
+<form method="GET">
+  <input type="text" name="location" placeholder="Enter city/village" required>
+  <button type="submit">Search</button>
+</form>
+
+<?php if (!empty($orders)): ?>
+  <table border="1">
+    <tr><th>Customer</th><th>Product</th><th>Qty</th><th>Total</th><th>Status</th></tr>
+    <?php while ($row = $orders->fetch_assoc()): ?>
+      <tr>
+        <td><?= $row['customer_name'] ?> (<?= $row['email'] ?>)</td>
+        <td><?= $row['product_name'] ?></td>
+        <td><?= $row['quantity'] ?></td>
+        <td>₹<?= $row['total_price'] ?></td>
+        <td><?= $row['status'] ?></td>
+      </tr>
+    <?php endwhile; ?>
+  </table>
+<?php endif; ?>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+View feedback and ratings: view_feedback.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$admin_id = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("
+  SELECT f.*, u.name AS user_name, p.name AS product_name 
+  FROM feedback f 
+  JOIN users u ON f.user_id = u.id 
+  JOIN products p ON f.product_id = p.id 
+  WHERE p.admin_id = ?
+");
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$feedbacks = $stmt->get_result();
+?>
+
+<h2>Customer Feedback & Ratings</h2>
+<table border="1">
+<tr><th>Product</th><th>User</th><th>Rating</th><th>Comment</th></tr>
+<?php while ($f = $feedbacks->fetch_assoc()): ?>
+<tr>
+  <td><?= $f['product_name'] ?></td>
+  <td><?= $f['user_name'] ?></td>
+  <td><?= $f['rating'] ?>/5</td>
+  <td><?= $f['comment'] ?></td>
+</tr>
+<?php endwhile; ?>
+</table>
+
+-------------------------------------------------------------------------------------------------------------------------
+
+Feedback page (user) - add on delivery: feedback.php
+
+<?php
+session_start();
+include('db.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = $_SESSION['user']['id'];
+    $product_id = $_POST['product_id'];
+    $rating = $_POST['rating'];
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Product search bar: search.php
+
+<?php
+session_start();
+include('db.php');
+
+$query = $_GET['q'] ?? '';
+
+$products = [];
+
+if ($query) {
+    $search = "%$query%";
+    $stmt = $conn->prepare("
+        SELECT p.*, u.name AS farmer_name
+        FROM products p
+        JOIN users u ON p.admin_id = u.id
+        WHERE p.name LIKE ? OR p.category LIKE ? OR u.name LIKE ?
+    ");
+    $stmt->bind_param("sss", $search, $search, $search);
+    $stmt->execute();
+    $products = $stmt->get_result();
+}
+?>
+
+<h2>Search Products</h2>
+<form method="GET">
+  <input type="text" name="q" placeholder="Search by name, category, or farmer" value="<?= htmlspecialchars($query) ?>">
+  <button type="submit">Search</button>
+</form>
+
+<?php if ($products && $products->num_rows > 0): ?>
+  <ul>
+    <?php while ($row = $products->fetch_assoc()): ?>
+      <li>
+        <?= $row['name'] ?> - ₹<?= $row['price'] ?> (<?= $row['category'] ?>) by <?= $row['farmer_name'] ?>
+        <form action="add_to_cart.php" method="POST" style="display:inline;">
+          <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
+          <input type="number" name="quantity" value="1" min="1" max="<?= $row['stock'] ?>">
+          <button type="submit">Add to Bag</button>
+        </form>
+      </li>
+    <?php endwhile; ?>
+  </ul>
+<?php elseif ($query): ?>
+  <p>No results found.</p>
+<?php endif; ?>
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Customer Order History:  user_orders.php
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'user') {
+    header("Location: login.php");
+    exit;
+}
+
+$user_id = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("
+    SELECT o.*, p.name AS product_name, u.name AS farmer_name
+    FROM orders o
+    JOIN products p ON o.product_id = p.id
+    JOIN users u ON p.admin_id = u.id
+    WHERE o.user_id = ?
+    ORDER BY o.created_at DESC
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$orders = $stmt->get_result();
+?>
+
+<h2>Your Order History</h2>
+
+<?php if ($orders->num_rows > 0): ?>
+  <table border="1">
+    <tr>
+      <th>Product</th>
+      <th>Farmer</th>
+      <th>Quantity</th>
+      <th>Total Price</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+    <?php while ($order = $orders->fetch_assoc()): ?>
+    <tr>
+      <td><?= $order['product_name'] ?></td>
+      <td><?= $order['farmer_name'] ?></td>
+      <td><?= $order['quantity'] ?></td>
+      <td>₹<?= $order['total_price'] ?></td>
+      <td><?= ucfirst($order['status']) ?></td>
+      <td><?= $order['created_at'] ?></td>
+    </tr>
+    <?php endwhile; ?>
+  </table>
+<?php else: ?>
+  <p>You haven't placed any orders yet.</p>
+<?php endif; ?>
+
+------------------------------------------------------------------------------------------------------------------------
+
+Admin View of Customer History:  customer_history.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if (!isset($_SESSION['user']) || $_SESSION['user']['user_type'] !== 'admin') {
+    header("Location: login.php");
+    exit;
+}
+
+$admin_id = $_SESSION['user']['id'];
+
+$stmt = $conn->prepare("
+    SELECT o.*, p.name AS product_name, u.name AS customer_name, u.email
+    FROM orders o
+    JOIN products p ON o.product_id = p.id
+    JOIN users u ON o.user_id = u.id
+    WHERE p.admin_id = ?
+    ORDER BY o.created_at DESC
+");
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$orders = $stmt->get_result();
+?>
+
+<h2>Customer Purchase History</h2>
+
+<?php if ($orders->num_rows > 0): ?>
+  <table border="1">
+    <tr>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Date</th>
+    </tr>
+    <?php while ($order = $orders->fetch_assoc()): ?>
+    <tr>
+      <td><?= $order['customer_name'] ?></td>
+      <td><?= $order['email'] ?></td>
+      <td><?= $order['product_name'] ?></td>
+      <td><?= $order['quantity'] ?></td>
+      <td>₹<?= $order['total_price'] ?></td>
+      <td><?= $order['created_at'] ?></td>
+    </tr>
+    <?php endwhile; ?>
+  </table>
+<?php else: ?>
+  <p>No orders found.</p>
+<?php endif; ?>
+
+------------------------------------------------------------------------------------------------------------------------
+
+Mark Order as Delivered (Admin): mark_delivered.php
+
+
+<?php
+session_start();
+include('db.php');
+
+if ($_SESSION['user']['user_type'] !== 'admin') {
+    exit("Unauthorized");
+}
+
+$order_id = $_GET['order_id'];
+$stmt = $conn->prepare("UPDATE orders SET status='delivered' WHERE id=?");
+$stmt->bind_param("i", $order_id);
+$stmt->execute();
+
+header("Location: dashboard_admin.php");
+exit;
+
+
+
+
+In your admin order list, just link to this:
+
+<a href="mark_delivered.php?order_id=<?= $order['id'] ?>">Mark as Delivered</a>
+
+---------------------------------------------------------JS enhancement---------------------------------------------------------
+
+Js Enhancement: script.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  const qtyInputs = document.querySelectorAll("input[type=number]");
+  qtyInputs.forEach(input => {
+    input.addEventListener("change", () => {
+      if (input.value < 1) input.value = 1;
+    });
+  });
+});
+
+--------------------------------------------------------CSS--------------------------------------------------------------
+
+CSS: style.css
+
+
+body {
+  font-family: Arial;
+  margin: 20px;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin: 10px;
+  display: inline-block;
+  width: 200px;
+  vertical-align: top;
+}
+
+h1, h2 {
+  color: #2e7d32;
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+table {
+  width: 70%;
+  border-collapse: collapse;
+}
+
+

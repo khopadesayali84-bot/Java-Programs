@@ -1,0 +1,1597 @@
+index.html file
+
+------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Basket - Farm Fresh Vegetables</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://static.photos/agriculture/1200x630/42');
+            background-size: cover;
+            background-position: center;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-feather="shopping-bag" class="text-green-300"></i>
+                <span class="text-xl font-bold">Green Basket</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-green-200">Home</a>
+                <a href="#about" class="hover:text-green-200">About</a>
+                <a href="#how-it-works" class="hover:text-green-200">How It Works</a>
+                <a href="#contact" class="hover:text-green-200">Contact</a>
+            </div>
+            <div class="flex space-x-4">
+                <a href="login.html" class="px-4 py-2 rounded hover:bg-green-600">Login</a>
+                <a href="signup.html" class="px-4 py-2 bg-green-500 rounded hover:bg-green-400">Sign Up</a>
+            </div>
+            <button class="md:hidden" id="menu-toggle">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-green-800 px-4 py-2" id="mobile-menu">
+            <a href="#" class="block py-2 hover:bg-green-700 px-2 rounded">Home</a>
+            <a href="#about" class="block py-2 hover:bg-green-700 px-2 rounded">About</a>
+            <a href="#how-it-works" class="block py-2 hover:bg-green-700 px-2 rounded">How It Works</a>
+            <a href="#contact" class="block py-2 hover:bg-green-700 px-2 rounded">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center" data-aos="fade-up">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">Farm Fresh Vegetables Direct to Your Door</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Connecting farmers directly with consumers for fresher produce at better prices</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="signup.html" class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Get Started</a>
+                <a href="#how-it-works" class="bg-white hover:bg-gray-100 text-green-700 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Preview -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Our Categories</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Category 1 -->
+                <div class="category-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300" data-aos="fade-up">
+                    <img src="http://static.photos/vegetables/640x360/1" alt="Leafy Vegetables" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Leafy Vegetables</h3>
+                        <p class="text-gray-600">Fresh spinach, kale, lettuce and more</p>
+                    </div>
+                </div>
+                
+                <!-- Category 2 -->
+                <div class="category-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <img src="http://static.photos/vegetables/640x360/2" alt="Root Vegetables" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Root Vegetables</h3>
+                        <p class="text-gray-600">Carrots, potatoes, onions and more</p>
+                    </div>
+                </div>
+                
+                <!-- Category 3 -->
+                <div class="category-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <img src="http://static.photos/vegetables/640x360/3" alt="Fruits" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Fruits</h3>
+                        <p class="text-gray-600">Seasonal fruits from local orchards</p>
+                    </div>
+                </div>
+                
+                <!-- Category 4 -->
+                <div class="category-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <img src="http://static.photos/grains/640x360/4" alt="Grains" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2 text-gray-800">Grains</h3>
+                        <p class="text-gray-600">Rice, wheat, millets and more</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-10">
+                <a href="categories.html" class="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300">
+                    View All Categories
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">How Green Basket Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center" data-aos="fade-up">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="user" class="text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">1. Create an Account</h3>
+                    <p class="text-gray-600">Sign up as a farmer or customer to get started with our platform.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="shopping-cart" class="text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">2. Browse or List Products</h3>
+                    <p class="text-gray-600">Customers browse fresh produce, farmers list their harvests.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-feather="truck" class="text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">3. Get Fresh Delivery</h3>
+                    <p class="text-gray-600">Farmers deliver directly to your doorstep or arrange for pickup.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8" data-aos="fade-right">
+                    <img src="http://static.photos/farmers/640x360/5" alt="Farmers" class="rounded-lg shadow-lg w-full">
+                </div>
+                <div class="md:w-1/2" data-aos="fade-left">
+                    <h2 class="text-3xl font-bold mb-6 text-gray-800">About Green Basket</h2>
+                    <p class="text-gray-600 mb-4">
+                        Green Basket is a revolutionary platform that connects local farmers directly with consumers, eliminating middlemen and ensuring fair prices for both parties.
+                    </p>
+                    <p class="text-gray-600 mb-4">
+                        Our mission is to support local agriculture while providing consumers with the freshest, most affordable produce available.
+                    </p>
+                    <p class="text-gray-600">
+                        By cutting out the traditional supply chain, we reduce costs, minimize food waste, and ensure farmers receive a larger share of the profits.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">What People Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md" data-aos="fade-up">
+                    <div class="flex items-center mb-4">
+                        <img src="http://static.photos/people/200x200/1" alt="Customer" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Sarah Johnson</h4>
+                            <div class="flex text-yellow-400">
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">
+                        "The vegetables I get from Green Basket are so much fresher than the supermarket. I love knowing exactly which farm they come from!"
+                    </p>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-center mb-4">
+                        <img src="http://static.photos/people/200x200/2" alt="Farmer" class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-semibold">Raj Patel</h4>
+                            <div class="flex text-yellow-400">
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                                <i data-feather="star" class="fill-current"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">
+                        "Green Basket has transformed my farm business. I now get fair prices for my produce and have built relationships with local customers."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-700 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6">Ready to Experience Freshness?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Join Green Basket today and start enjoying farm-fresh produce at affordable prices.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="signup.html" class="bg-white hover:bg-gray-100 text-green-700 px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Sign Up Now</a>
+                <a href="login.html" class="bg-green-600 hover:bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold transition duration-300">Login</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Contact Us</h2>
+            <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-700 mb-2">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-gray-700 mb-2">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+                        </div>
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition duration-300">Send Message</button>
+                    </form>
+                </div>
+                <div class="md:w-1/2 md:pl-8">
+                    <div class="bg-gray-100 p-6 rounded-lg h-full">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Our Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i data-feather="map-pin" class="text-green-600 mr-4 mt-1"></i>
+                                <p>123 Farm Road, Agricultural District, Country</p>
+                            </div>
+                            <div class="flex items-center">
+                                <i data-feather="mail" class="text-green-600 mr-4"></i>
+                                <p>contact@greenbasket.com</p>
+                            </div>
+                            <div class="flex items-center">
+                                <i data-feather="phone" class="text-green-600 mr-4"></i>
+                                <p>+1 (123) 456-7890</p>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="text-lg font-semibold mb-3 text-gray-800">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="bg-green-600 text-white p-2 rounded-full hover:bg-green-700">
+                                    <i data-feather="facebook"></i>
+                                </a>
+                                <a href="#" class="bg-green-600 text-white p-2 rounded-full hover:bg-green-700">
+                                    <i data-feather="twitter"></i>
+                                </a>
+                                <a href="#" class="bg-green-600 text-white p-2 rounded-full hover:bg-green-700">
+                                    <i data-feather="instagram"></i>
+                                </a>
+                                <a href="#" class="bg-green-600 text-white p-2 rounded-full hover:bg-green-700">
+                                    <i data-feather="linkedin"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Green Basket</h3>
+                    <p>Connecting farmers directly with consumers for fresher produce at better prices.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-green-400">Home</a></li>
+                        <li><a href="#about" class="hover:text-green-400">About</a></li>
+                        <li><a href="#how-it-works" class="hover:text-green-400">How It Works</a></li>
+                        <li><a href="#contact" class="hover:text-green-400">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Account</h4>
+                    <ul class="space-y-2">
+                        <li><a href="login.html" class="hover:text-green-400">Login</a></li>
+                        <li><a href="signup.html" class="hover:text-green-400">Sign Up</a></li>
+                        <li><a href="#" class="hover:text-green-400">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-green-400">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Newsletter</h4>
+                    <p>Subscribe to get updates on new products and offers.</p>
+                    <div class="mt-4 flex">
+                        <input type="email" placeholder="Your email" class="px-4 py-2 rounded-l-lg text-gray-800 w-full">
+                        <button class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded-r-lg">
+                            <i data-feather="send"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+                <p>&copy; 2023 Green Basket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Initialize AOS and Feather Icons
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        feather.replace();
+    </script>
+</body>
+</html>
+
+-------------------------------------------------------------------------------------------------------------------------
+
+login.html
+
+--------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Green Basket</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .login-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://static.photos/farm/1200x630/10');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-feather="shopping-bag" class="text-green-300"></i>
+                <span class="text-xl font-bold">Green Basket</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="hover:text-green-200">Home</a>
+                <a href="index.html#about" class="hover:text-green-200">About</a>
+                <a href="index.html#how-it-works" class="hover:text-green-200">How It Works</a>
+                <a href="index.html#contact" class="hover:text-green-200">Contact</a>
+            </div>
+            <div class="flex space-x-4">
+                <a href="login.html" class="px-4 py-2 bg-green-600 rounded">Login</a>
+                <a href="signup.html" class="px-4 py-2 bg-green-500 rounded hover:bg-green-400">Sign Up</a>
+            </div>
+            <button class="md:hidden" id="menu-toggle">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-green-800 px-4 py-2" id="mobile-menu">
+            <a href="index.html" class="block py-2 hover:bg-green-700 px-2 rounded">Home</a>
+            <a href="index.html#about" class="block py-2 hover:bg-green-700 px-2 rounded">About</a>
+            <a href="index.html#how-it-works" class="block py-2 hover:bg-green-700 px-2 rounded">How It Works</a>
+            <a href="index.html#contact" class="block py-2 hover:bg-green-700 px-2 rounded">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="login-bg text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white bg-opacity-90 backdrop-blur-sm rounded-lg overflow-hidden shadow-lg" data-aos="fade-up">
+                <div class="bg-green-700 px-6 py-4">
+                    <h2 class="text-2xl font-bold text-center">Login to Green Basket</h2>
+                </div>
+                <div class="p-6 text-gray-800">
+                    <div class="flex justify-center mb-6">
+                        <button id="user-btn" class="px-6 py-2 bg-green-600 text-white rounded-l-lg font-medium">User</button>
+                        <button id="admin-btn" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-r-lg font-medium">Farmer</button>
+                    </div>
+                    
+                    <!-- User Login Form -->
+                    <form id="user-form" class="space-y-4">
+                        <div>
+                            <label for="user-email" class="block mb-2 font-medium">Email</label>
+                            <input type="email" id="user-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="user-password" class="block mb-2 font-medium">Password</label>
+                            <input type="password" id="user-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                            </div>
+                            <a href="forgot-password.html" class="text-sm text-green-600 hover:underline">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">Login</button>
+                    </form>
+                    
+                    <!-- Admin Login Form (Hidden by default) -->
+                    <form id="admin-form" class="space-y-4 hidden">
+                        <div>
+                            <label for="admin-email" class="block mb-2 font-medium">Email</label>
+                            <input type="email" id="admin-email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="admin-password" class="block mb-2 font-medium">Password</label>
+                            <input type="password" id="admin-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember-admin" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                                <label for="remember-admin" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                            </div>
+                            <a href="forgot-password.html" class="text-sm text-green-600 hover:underline">Forgot password?</a>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">Login as Farmer</button>
+                    </form>
+                    
+                    <div class="mt-4 text-center">
+                        <p class="text-gray-600">Don't have an account? <a href="signup.html" class="text-green-600 hover:underline">Sign up</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2023 Green Basket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Toggle between user and admin login forms
+        const userBtn = document.getElementById('user-btn');
+        const adminBtn = document.getElementById('admin-btn');
+        const userForm = document.getElementById('user-form');
+        const adminForm = document.getElementById('admin-form');
+
+        userBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            userBtn.classList.remove('bg-gray-200', 'text-gray-800');
+            userBtn.classList.add('bg-green-600', 'text-white');
+            adminBtn.classList.remove('bg-green-600', 'text-white');
+            adminBtn.classList.add('bg-gray-200', 'text-gray-800');
+            userForm.classList.remove('hidden');
+            adminForm.classList.add('hidden');
+        });
+
+        adminBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            adminBtn.classList.remove('bg-gray-200', 'text-gray-800');
+            adminBtn.classList.add('bg-green-600', 'text-white');
+            userBtn.classList.remove('bg-green-600', 'text-white');
+            userBtn.classList.add('bg-gray-200', 'text-gray-800');
+            adminForm.classList.remove('hidden');
+            userForm.classList.add('hidden');
+        });
+
+        // Form submission
+        userForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically validate and send the data to your backend
+            window.location.href = 'user-dashboard.html';
+        });
+
+        adminForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically validate and send the data to your backend
+            window.location.href = 'admin-dashboard.html';
+        });
+
+        // Initialize AOS and Feather Icons
+        AOS.init();
+        feather.replace();
+    </script>
+</body>
+</html>
+
+--------------------------------------------------------------------------------------------------------------------------
+
+signup.html
+
+---------------------------------------------------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Green Basket</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .signup-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('http://static.photos/harvest/1200x630/15');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-green-700 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-feather="shopping-bag" class="text-green-300"></i>
+                <span class="text-xl font-bold">Green Basket</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="index.html" class="hover:text-green-200">Home</a>
+                <a href="index.html#about" class="hover:text-green-200">About</a>
+                <a href="index.html#how-it-works" class="hover:text-green-200">How It Works</a>
+                <a href="index.html#contact" class="hover:text-green-200">Contact</a>
+            </div>
+            <div class="flex space-x-4">
+                <a href="login.html" class="px-4 py-2 rounded hover:bg-green-600">Login</a>
+                <a href="signup.html" class="px-4 py-2 bg-green-500 rounded">Sign Up</a>
+            </div>
+            <button class="md:hidden" id="menu-toggle">
+                <i data-feather="menu"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-green-800 px-4 py-2" id="mobile-menu">
+            <a href="index.html" class="block py-2 hover:bg-green-700 px-2 rounded">Home</a>
+            <a href="index.html#about" class="block py-2 hover:bg-green-700 px-2 rounded">About</a>
+            <a href="index.html#how-it-works" class="block py-2 hover:bg-green-700 px-2 rounded">How It Works</a>
+            <a href="index.html#contact" class="block py-2 hover:bg-green-700 px-2 rounded">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Signup Section -->
+    <section class="signup-bg text-white py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto bg-white bg-opacity-90 backdrop-blur-sm rounded-lg overflow-hidden shadow-lg" data-aos="fade-up">
+                <div class="bg-green-700 px-6 py-4">
+                    <h2 class="text-2xl font-bold text-center">Create Your Account</h2>
+                </div>
+                <div class="p-6 text-gray-800">
+                    <form id="signup-form" class="space-y-4">
+                        <div>
+                            <label for="name" class="block mb-2 font-medium">Full Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-2 font-medium">Email</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 font-medium">Password</label>
+                            <input type="password" id="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="confirm-password" class="block mb-2 font-medium">Confirm Password</label>
+                            <input type="password" id="confirm-password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="phone" class="block mb-2 font-medium">Phone Number</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required>
+                        </div>
+                        <div>
+                            <label for="address" class="block mb-2 font-medium">Address</label>
+                            <textarea id="address" rows="2" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block mb-2 font-medium">Account Type</label>
+                            <div class="flex space-x-4">
+                                <div class="flex items-center">
+                                    <input type="radio" id="user-type" name="account-type" value="user" class="h-4 w-4 text-green-600 focus:ring-green-500" checked>
+                                    <label for="user-type" class="ml-2 block text-sm text-gray-700">Customer</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="admin-type" name="account-type" value="admin" class="h-4 w-4 text-green-600 focus:ring-green-500">
+                                    <label for="admin-type" class="ml-2 block text-sm text-gray-700">Farmer</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="farm-fields" class="hidden space-y-4">
+                            <div>
+                                <label for="farm-name" class="block mb-2 font-medium">Farm Name</label>
+                                <input type="text" id="farm-name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                            <div>
+                                <label for="farm-location" class="block mb-2 font-medium">Farm Location</label>
+                                <input type="text" id="farm-location" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                            <div>
+                                <label for="farm-certification" class="block mb-2 font-medium">Certification (if any)</label>
+                                <input type="text" id="farm-certification" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="terms" class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" required>
+                            <label for="terms" class="ml-2 block text-sm text-gray-700">I agree to the <a href="#" class="text-green-600 hover:underline">Terms of Service</a> and <a href="#" class="text-green-600 hover:underline">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">Create Account</button>
+                    </form>
+                    <div class="mt-4 text-center">
+                        <p class="text-gray-600">Already have an account? <a href="login.html" class="text-green-600 hover:underline">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2023 Green Basket. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Toggle farm fields based on account type
+        const userType = document.getElementById('user-type');
+        const adminType = document.getElementById('admin-type');
+        const farmFields = document.getElementById('farm-fields');
+
+        userType.addEventListener('change', function() {
+            if (this.checked) {
+                farmFields.classList.add('hidden');
+            }
+        });
+
+        adminType.addEventListener('change', function() {
+            if (this.checked) {
+                farmFields.classList.remove('hidden');
+            }
+        });
+
+        // Form submission
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Here you would typically validate and send the data to your backend
+            const accountType = document.querySelector('input[name="account-type"]:checked').value;
+            
+            if (accountType === 'user') {
+                window.location.href = 'user-dashboard.html';
+            } else {
+                window.location.href = 'admin-dashboard.html';
+            }
+        });
+
+        // Initialize AOS and Feather Icons
+        AOS.init();
+        feather.replace();
+    </script>
+</body>
+</html>
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+user-dashboard.html
+
+---------------------------------------------------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Green Basket</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    <!-- Dashboard Layout -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-green-800 text-white w-64 fixed h-full overflow-y-auto" id="sidebar">
+            <div class="p-4 flex items-center space-x-2 border-b border-green-700">
+                <i data-feather="user" class="text-green-300"></i>
+                <span class="text-xl font-bold">User Dashboard</span>
+            </div>
+            <nav class="p-4">
+                <div class="mb-8">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <img src="http://static.photos/people/200x200/3" alt="User" class="w-10 h-10 rounded-full">
+                        <div>
+                            <p class="font-medium">John Doe</p>
+                            <p class="text-xs text-green-300">Premium Member</p>
+                        </div>
+                    </div>
+                    <div class="bg-green-700 rounded-lg p-3 text-sm">
+                        <div class="flex justify-between mb-1">
+                            <span>Order Points</span>
+                            <span>650/1000</span>
+                        </div>
+                        <div class="w-full bg-green-600 rounded-full h-2">
+                            <div class="bg-green-300 h-2 rounded-full" style="width: 65%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <ul class="space-y-2">
+                    <li>
+                        <a href="user-dashboard.html" class="flex items-center space-x-3 p-3 rounded-lg bg-green-700">
+                            <i data-feather="home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="categories.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="shopping-bag"></i>
+                            <span>Shop Products</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="orders.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="package"></i>
+                            <span>My Orders</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="cart.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="shopping-cart"></i>
+                            <span>My Cart</span>
+                            <span class="bg-green-600 text-xs px-2 py-1 rounded-full">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="wishlist.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="heart"></i>
+                            <span>Wishlist</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="reviews.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="star"></i>
+                            <span>My Reviews</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="settings.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="settings"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="index.html" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700">
+                            <i data-feather="log-out"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 overflow-auto ml-64">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <button id="sidebar-toggle" class="mr-4 text-gray-600">
+                        <i data-feather="menu"></i>
+                    </button>
+                    <div class="relative">
+                        <input type="text" placeholder="Search products..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 w-64">
+                        <i data-feather="search" class="absolute left-3 top-2.5 text-gray-400"></i>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 rounded-full hover:bg-gray-100 relative">
+                        <i data-feather="bell"></i>
+                        <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-100">
+                        <i data-feather="message-square"></i>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <img src="http://static.photos/people/200x200/3" alt="User" class="w-8 h-8 rounded-full">
+                        <span class="font-medium">John</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Welcome back, John!</h1>
+                    <p class="text-gray-600">Here's what's happening with your orders today</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-green-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Active Orders</p>
+                                <h3 class="text-2xl font-bold mt-1">2</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i data-feather="package" class="text-green-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-green-600 mt-2">+1 from yesterday</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Cart Items</p>
+                                <h3 class="text-2xl font-bold mt-1">3</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i data-feather="shopping-cart" class="text-blue-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-blue-600 mt-2">Ready to checkout</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Wishlist</p>
+                                <h3 class="text-2xl font-bold mt-1">5</h3>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i data-feather="heart" class="text-yellow-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-yellow-600 mt-2">Items saved</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-purple-500">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm text-gray-500">Farmers Nearby</p>
+                                <h3 class="text-2xl font-bold mt-1">12</h3>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i data-feather="map-pin" class="text-purple-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-xs text-purple-600 mt-2">In your area</p>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white p-6 rounded-lg shadow-sm mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Recent Orders</h2>
+                        <a href="orders.html" class="text-green-600 hover:underline text-sm">View All</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Farmer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#GB-1254</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12 Jun 2023</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 items</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Fresh Farm</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$24.50</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Delivered</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-green-600 hover:text-green-900">Review</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#GB-1253</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10 Jun 2023</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">5 items</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Organic Valley</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$38.75</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">In Transit</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <a href="#" class="text-green-600 hover:text-green-900">Track</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recommended Products -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Recommended For You</h2>
+                        <a href="categories.html" class="text-green-600 hover:underline text-sm">View All</a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Product 1 -->
+                        <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
+                            <div class="relative">
+                                <img src="http://static.photos/vegetables/640x360/6" alt="Organic Tomatoes" class="w-full h-48 object-cover">
+                                <div class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">Fresh</div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Organic Tomatoes</h3>
+                                <p class="text-gray-600 text-sm mb-2">From Fresh Farm</p>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(24)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-green-600">$2.99/kg</span>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                        <i data-feather="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 2 -->
+                        <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
+                            <div class="relative">
+                                <img src="http://static.photos/vegetables/640x360/7" alt="Fresh Spinach" class="w-full h-48 object-cover">
+                                <div class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded-full">New</div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Fresh Spinach</h3>
+                                <p class="text-gray-600 text-sm mb-2">From Green Valley</p>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(18)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-green-600">$1.99/bunch</span>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                        <i data-feather="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 3 -->
+                        <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
+                            <img src="http://static.photos/vegetables/640x360/8" alt="Carrots" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Carrots</h3>
+                                <p class="text-gray-600 text-sm mb-2">From Organic Farm</p>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="w-4 h-4 text-gray-300"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(32)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-green-600">$1.49/kg</span>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                        <i data-feather="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 4 -->
+                        <div class="product-card bg-white rounded-lg shadow-sm overflow-hidden transition duration-300">
+                            <img src="http://static.photos/fruits/640x360/9" alt="Apples" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Fresh Apples</h3>
+                                <p class="text-gray-600 text-sm mb-2">From Sunny Orchard</p>
+                                <div class="flex items-center mb-2">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="w-4 h-4 text-gray-300"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(27)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold text-green-600">$3.99/kg</span>
+                                    <button class="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full">
+                                        <i data-feather="plus" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nearby Farmers -->
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Farmers Near You</h2>
+                        <a href="#" class="text-green-600 hover:underline text-sm">View All</a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Farmer 1 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <img src="http://static.photos/farmers/640x360/10" alt="Fresh Farm" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Fresh Farm</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-2">
+                                    <i data-feather="map-pin" class="w-4 h-4 mr-1"></i>
+                                    <span>2.5 km away</span>
+                                </div>
+                                <div class="flex items-center mb-3">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="w-4 h-4 text-gray-300"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(42 reviews)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Organic, Seasonal</span>
+                                    <a href="#" class="text-green-600 hover:underline text-sm">View Products</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Farmer 2 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <img src="http://static.photos/farmers/640x360/11" alt="Green Valley" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Green Valley</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-2">
+                                    <i data-feather="map-pin" class="w-4 h-4 mr-1"></i>
+                                    <span>3.2 km away</span>
+                                </div>
+                                <div class="flex items-center mb-3">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(56 reviews)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Organic, Sustainable</span>
+                                    <a href="#" class="text-green-600 hover:underline text-sm">View Products</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Farmer 3 -->
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <img src="http://static.photos/farmers/640x360/12" alt="Sunny Orchard" class="w-full h-40 object-cover">
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Sunny Orchard</h3>
+                                <div class="flex items-center text-sm text-gray-600 mb-2">
+                                    <i data-feather="map-pin" class="w-4 h-4 mr-1"></i>
+                                    <span>5.1 km away</span>
+                                </div>
+                                <div class="flex items-center mb-3">
+                                    <div class="flex text-yellow-400">
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="fill-current w-4 h-4"></i>
+                                        <i data-feather="star" class="w-4 h-4 text-gray-300"></i>
+                                    </div>
+                                    <span class="text-gray-500 text-xs ml-1">(38 reviews)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm text-gray-600">Fruits, Organic</span>
+                                    <a href="#" class="text-green-600 hover:underline text-sm">View Products</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-ml-64');
+        });
+
+        // Initialize AOS and Feather Icons
+        AOS.init();
+        feather.replace();
+    </script>
+</body>
+</html>
+
+---------------------------------------------------------------------------------------------------------------------------
+
+admin-dashboard.html
+
+---------------------------------------------------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard - Green Basket</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        .sidebar {
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            height: 300px;
+        }
+        [data-aos] {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    <!-- Dashboard Layout -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar bg-green-800 text-white w-64 fixed h-full overflow-y-auto" id="sidebar">
+            <div class="p-4 flex items-center space-x-3 border-b border-green-700">
+                <div class="bg-green-600 p-2 rounded-full">
+                    <i data-feather="shopping-bag" class="w-6 h-6"></i>
+                </div>
+                <h1 class="text-xl font-bold">Green Basket</h1>
+            </div>
+            
+            <div class="p-4">
+                <div class="flex items-center space-x-3 mb-6">
+                    <img src="http://static.photos/people/200x200/42" alt="Profile" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <h3 class="font-medium">Farmer Name</h3>
+                        <p class="text-green-200 text-sm">Admin</p>
+                    </div>
+                </div>
+                
+                <nav class="space-y-1">
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg bg-green-700 text-white">
+                        <i data-feather="home" class="w-5 h-5"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="package" class="w-5 h-5"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="shopping-cart" class="w-5 h-5"></i>
+                        <span>Orders</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">5</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="users" class="w-5 h-5"></i>
+                        <span>Customers</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="bar-chart-2" class="w-5 h-5"></i>
+                        <span>Analytics</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="message-square" class="w-5 h-5"></i>
+                        <span>Feedback</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-green-700 text-green-100 hover:text-white">
+                        <i data-feather="settings" class="w-5 h-5"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex-1 ml-64 overflow-auto">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center space-x-4">
+                        <button id="sidebar-toggle" class="text-gray-600 hover:text-gray-900">
+                            <i data-feather="menu" class="w-6 h-6"></i>
+                        </button>
+                        <div class="relative">
+                            <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <i data-feather="search" class="absolute left-3 top-2.5 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-600 hover:text-gray-900 relative">
+                            <i data-feather="bell" class="w-6 h-6"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">3</span>
+                        </button>
+                        <div class="flex items-center space-x-2">
+                            <img src="http://static.photos/people/200x200/42" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                            <span class="font-medium">Farmer</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Total Products</p>
+                                <h3 class="text-2xl font-bold">142</h3>
+                            </div>
+                            <div class="bg-green-100 p-3 rounded-full">
+                                <i data-feather="package" class="w-6 h-6 text-green-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-green-600 text-sm mt-2">+12% from last week</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Today's Orders</p>
+                                <h3 class="text-2xl font-bold">24</h3>
+                            </div>
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i data-feather="shopping-cart" class="w-6 h-6 text-blue-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-blue-600 text-sm mt-2">+5% from yesterday</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Pending Orders</p>
+                                <h3 class="text-2xl font-bold">8</h3>
+                            </div>
+                            <div class="bg-yellow-100 p-3 rounded-full">
+                                <i data-feather="clock" class="w-6 h-6 text-yellow-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-yellow-600 text-sm mt-2">2 urgent deliveries</p>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500">Customer Rating</p>
+                                <h3 class="text-2xl font-bold">4.8</h3>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-full">
+                                <i data-feather="star" class="w-6 h-6 text-purple-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-purple-600 text-sm mt-2">+0.2 from last month</p>
+                    </div>
+                </div>
+
+                <!-- Charts and Recent Orders -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                    <!-- Sales Chart -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2" data-aos="fade-up">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold">Weekly Sales</h2>
+                            <select class="border rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option>This Week</option>
+                                <option>Last Week</option>
+                                <option>This Month</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Orders -->
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="text-lg font-semibold mb-4">Recent Orders</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 border-b">
+                                <div>
+                                    <p class="font-medium">#ORD-4567</p>
+                                    <p class="text-sm text-gray-500">Tomatoes, Potatoes</p>
+                                </div>
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">Delivered</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 border-b">
+                                <div>
+                                    <p class="font-medium">#ORD-4566</p>
+                                    <p class="text-sm text-gray-500">Apples, Oranges</p>
+                                </div>
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Processing</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 border-b">
+                                <div>
+                                    <p class="font-medium">#ORD-4565</p>
+                                    <p class="text-sm text-gray-500">Carrots, Onions</p>
+                                </div>
+                                <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Shipped</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 border-b">
+                                <div>
+                                    <p class="font-medium">#ORD-4564</p>
+                                    <p class="text-sm text-gray-500">Milk, Eggs</p>
+                                </div>
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Pending</span>
+                            </div>
+                        </div>
+                        <a href="#" class="block text-center text-green-600 mt-4 text-sm font-medium">View All Orders</a>
+                    </div>
+                </div>
+
+                <!-- Products and Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Top Products -->
+                    <div class="bg-white rounded-xl shadow-sm p-6 lg:col-span-2" data-aos="fade-up">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold">Top Products</h2>
+                            <button class="text-green-600 text-sm font-medium">Manage Products</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="text-left text-gray-500 text-sm border-b">
+                                        <th class="pb-2">Product</th>
+                                        <th class="pb-2">Stock</th>
+                                        <th class="pb-2">Price</th>
+                                        <th class="pb-2">Sold</th>
+                                        <th class="pb-2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y">
+                                    <tr>
+                                        <td class="py-3 flex items-center space-x-3">
+                                            <img src="http://static.photos/food/200x200/1" alt="Tomatoes" class="w-10 h-10 rounded object-cover">
+                                            <span>Organic Tomatoes</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-600 h-2 rounded-full" style="width: 45%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-500">45/100 kg</span>
+                                        </td>
+                                        <td class="py-3">$2.99/kg</td>
+                                        <td class="py-3">55 kg</td>
+                                        <td class="py-3">
+                                            <button class="text-green-600 hover:text-green-800">
+                                                <i data-feather="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 flex items-center space-x-3">
+                                            <img src="http://static.photos/food/200x200/2" alt="Potatoes" class="w-10 h-10 rounded object-cover">
+                                            <span>Fresh Potatoes</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-600 h-2 rounded-full" style="width: 70%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-500">70/100 kg</span>
+                                        </td>
+                                        <td class="py-3">$1.49/kg</td>
+                                        <td class="py-3">30 kg</td>
+                                        <td class="py-3">
+                                            <button class="text-green-600 hover:text-green-800">
+                                                <i data-feather="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 flex items-center space-x-3">
+                                            <img src="http://static.photos/food/200x200/3" alt="Apples" class="w-10 h-10 rounded object-cover">
+                                            <span>Red Apples</span>
+                                        </td>
+                                        <td class="py-3">
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-green-600 h-2 rounded-full" style="width: 30%"></div>
+                                            </div>
+                                            <span class="text-xs text-gray-500">30/100 kg</span>
+                                        </td>
+                                        <td class="py-3">$3.99/kg</td>
+                                        <td class="py-3">70 kg</td>
+                                        <td class="py-3">
+                                            <button class="text-green-600 hover:text-green-800">
+                                                <i data-feather="edit" class="w-4 h-4"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-xl shadow-sm p-6" data-aos="fade-up" data-aos-delay="100">
+                        <h2 class="text-lg font-semibold mb-4">Quick Actions</h2>
+                        <div class="space-y-3">
+                            <button class="w-full flex items-center space-x-3 p-3 rounded-lg bg-green-600 text-white hover:bg-green-700 transition">
+                                <i data-feather="plus" class="w-5 h-5"></i>
+                                <span>Add New Product</span>
+                            </button>
+                            <button class="w-full flex items-center space-x-3 p-3 rounded-lg border border-green-600 text-green-600 hover:bg-green-50 transition">
+                                <i data-feather="refresh-cw" class="w-5 h-5"></i>
+                                <span>Update Stock</span>
+                            </button>
+                            <button class="w-full flex items-center space-x-3 p-3 rounded-lg border border-blue-600 text-blue-600 hover:bg-blue-50 transition">
+                                <i data-feather="truck" class="w-5 h-5"></i>
+                                <span>Process Orders</span>
+                            </button>
+                            <button class="w-full flex items-center space-x-3 p-3 rounded-lg border border-red-600 text-red-600 hover:bg-red-50 transition">
+                                <i data-feather="trash-2" class="w-5 h-5"></i>
+                                <span>Record Waste</span>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="font-medium mb-2">Stock Alert</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between p-2 bg-red-50 rounded">
+                                    <span class="text-sm">Organic Tomatoes</span>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Low</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-red-50 rounded">
+                                    <span class="text-sm">Red Apples</span>
+                                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">Low</span>
+                                </div>
+                                <div class="flex items-center justify-between p-2 bg-yellow-50 rounded">
+                                    <span class="text-sm">Fresh Potatoes</span>
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Medium</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init();
+        
+        // Initialize Feather Icons
+        feather.replace();
+        
+        // Toggle Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        });
+        
+        // Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Sales',
+                    data: [12, 19, 15, 23, 18, 25, 22],
+                    backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                    borderColor: 'rgba(5, 150, 105, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
